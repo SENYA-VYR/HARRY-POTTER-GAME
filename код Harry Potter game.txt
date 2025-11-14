@@ -1,0 +1,1054 @@
+import random
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
+variations = [
+    ["  ▲  ", " / \\ ", "(°_°)", " /|\\ ", "/ | \\"],
+    ["  ^  ", " / \\ ", "(•.•)", " /|\\ ", " / \\ "],
+    ["  .  ", " /_\\ ", "(@@)", " /|\\ ", "_/ \\_"],
+    ["  ╱╲ ", " ╱  ╲ ", "(◕‿◕)", "╱| |╲", "╱   ╲"],
+    ["  ○  ", " ╱ ╲ ", "(˚△˚)", " ╱|╲ ", "╱  ╲ "],
+    ["  ᴧ  ", " / \\ ", "(◉◡◉)", " /|\\ ", "/ | \\"],
+    ["  •  ", "╱---╲", "(•̀ᴗ•́)", " /|\\ ", "╱ ╲ "],
+    ["  ⇧  ", " / \\ ", "(◔_◔)", " /|\\ ", "_/ \\_"],
+    ["  ╲╱ ", " ╱  ╲ ", "(ᵔ◡ᵔ)", "╱| |╲", "╱   ╲"],
+    ["  △  ", " / \\ ", "(⊙﹏⊙)", " /|\\ ", "/   \\"],
+    ["  *  ", " / \\ ", "(¬_¬)", " /|\\ ", "/ | \\"],
+    ["  ↑  ", "╱   ╲", "(•‿•)", " /|\\ ", "╱ ╲ "],
+    ["  🔺 ", " / \\ ", "(◕‿◕)", " /|\\ ", "/ | \\"],
+    ["  ∧  ", "╱  ╲ ", "(°ロ°)", " /|\\ ", "_/ \\_"],
+    ["  +  ", " / \\ ", "(•ᴗ•)", " /|\\ ", "/   \\"],
+    ["  ╱\\ ", " ╱  \\ ", "(◡‿◡)", "╱| |\\", "╱   \\"],
+    ["  ᐱ  ", " / \\ ", "(•̀o•́)", " /|\\ ", "/ | \\"],
+    ["  ⋀  ", " ╱ ╲ ", "(^ᴗ^)", " ╱|╲ ", "╱  ╲ "],
+    ["  >< ", " ╱  ╲ ", "(•ˋ_ˊ•)", "╱| |╲", "╱   ╲"],
+    ["  🔺 ", " / \\ ", "(≧◡≦)", " /|\\ ", "/ | \\"]
+]
+
+
+class Wizard:
+    def __init__(self, name, surname, level, type_of_magic_wand, side_of_the_world_of_magic, magic_pet,
+                 magical_abilities, blood_purity, role="студент", appearance=None):
+        self.name = name
+        self.surname = surname
+        self.level = level
+        self.type_of_magic_wand = type_of_magic_wand
+        self.side_of_the_world_of_magic = side_of_the_world_of_magic
+        self.magic_pet = magic_pet
+        self.magical_abilities = magical_abilities
+        self.blood_purity = blood_purity
+        self.role = role
+        self.health = 100
+        self.reputation_points = 100
+        self.max_health = 100
+        self.wins = 0
+        self.losses = 0
+        self.artifacts = []
+        self.max_artifacts = 1
+        self.hogwarts_points = 0
+        self.lessons_attended = 0
+        self.appearance = appearance if appearance else random.choice(variations)
+        self.galleons = random.randint(50, 200)
+
+    def take_damage(self, amount):
+        self.health -= amount
+        if self.health < 0:
+            self.health = 0
+        print(f"{self.name} получил {amount} урона. Осталось здоровья: {self.health}")
+
+    def restore_health(self, amount):
+        self.health += amount
+        if self.health > self.max_health:
+            self.health = self.max_health
+        print(f"{self.name} восстановил {amount} здоровья. Текущее здоровье: {self.health}")
+
+    def lose_reputation(self, points):
+        self.reputation_points -= points
+        if self.reputation_points < 0:
+            self.reputation_points = 0
+        print(f"{self.name} потерял {points} пунктов репутации. Осталось репутации: {self.reputation_points}")
+
+    def gain_reputation(self, points):
+        self.reputation_points += points
+        print(f"{self.name} заработал {points} пункта репутации. Всего репутации: {self.reputation_points}")
+
+    def get_available_artifacts_count(self):
+        if self.reputation_points >= 300:
+            return 5
+        elif self.reputation_points >= 250:
+            return 4
+        elif self.reputation_points >= 200:
+            return 3
+        elif self.reputation_points >= 150:
+            return 2
+        else:
+            return 1
+
+    def can_equip_artifact(self):
+        return len(self.artifacts) < self.get_available_artifacts_count()
+
+    def add_artifact(self, artifact):
+        if self.can_equip_artifact():
+            self.artifacts.append(artifact)
+            print(f"{self.name} получил артефакт: {artifact.name}!")
+            return True
+        else:
+            print(f"{self.name} не может носить больше артефактов! Требуется повышение репутации.")
+            return False
+
+    def use_artifact_in_battle(self):
+        if not self.artifacts:
+            return 0
+
+        strongest_artifact = max(self.artifacts, key=lambda x: x.power)
+        print(f"{self.name} использует артефакт {strongest_artifact.name}!")
+        return strongest_artifact.power
+
+    def display_appearance(self):
+        if self.appearance:
+            print(f"Внешность {self.name}:")
+            for line in self.appearance:
+                print(line)
+            print()
+
+    def wizard_info(self):
+        print(f"Имя: {self.name}")
+        print(f"Фамилия: {self.surname}")
+        print(f"Роль в Хогвартсе: {self.role}")
+        print(f"Уровень владения магией: {self.level}")
+        print(f"Тип волшебной палочки: {self.type_of_magic_wand}")
+        print(f"Сторона в мире магии: {self.side_of_the_world_of_magic}")
+        print(f"Магический питомец: {self.magic_pet}")
+        print(f"Магические навыки: {self.magical_abilities}")
+        print(f"Чистота крови: {self.blood_purity}")
+        print(f"Здоровье: {self.health}/{self.max_health}")
+        print(f"Репутация: {self.reputation_points}")
+        print(f"Галлеоны: {self.galleons}")
+        print(f"Очки Хогвартса: {self.hogwarts_points}")
+        print(f"Посещено пар: {self.lessons_attended}")
+        print(f"Победы/Поражения: {self.wins}/{self.losses}")
+        print(f"Артефакты: {len(self.artifacts)}/{self.get_available_artifacts_count()}")
+        for artifact in self.artifacts:
+            print(f"  - {artifact.name} (сила: {artifact.power})")
+        self.display_appearance()
+        print(" ~ * ~ " * 8)
+
+
+def show_wizard_appearances():
+    print("\n" + "=" * 100)
+    print("ВЫБЕРИТЕ ВНЕШНОСТЬ ВАШЕГО ВОЛШЕБНИКА")
+    print("=" * 100)
+
+    for row in range(5):
+        for i, wizard in enumerate(variations, 1):
+            if i < 10:
+                print(f"{i}. {wizard[row]}  ", end="")
+            else:
+                print(f"{i}.{wizard[row]}  ", end="")
+        print()
+
+
+def choose_appearance():
+    show_wizard_appearances()
+
+    while True:
+        try:
+            choice = int(input("\nВыберите номер внешности (1-20) или 0 для случайного выбора: "))
+            if choice == 0:
+                return random.choice(variations)
+            elif 1 <= choice <= 20:
+                return variations[choice - 1]
+            else:
+                print("Пожалуйста, выберите номер от 1 до 20 или 0 для случайного выбора.")
+        except ValueError:
+            print("Пожалуйста, введите число.")
+
+
+def create_character():
+    print("\n" + "=" * 50)
+    print("СОЗДАНИЕ ПЕРСОНАЖА")
+    print("=" * 50)
+
+    name = input("Введите имя вашего волшебника: ")
+    surname = input("Введите фамилию вашего волшебника: ")
+
+    appearance = choose_appearance()
+
+    print("\nВыберите роль в Хогвартсе:")
+    print("1 - Студент")
+    print("2 - Преподаватель")
+    role_choice = input("Ваш выбор (1-2): ").strip()
+    role = "преподаватель" if role_choice == "2" else "студент"
+
+    print("\nВыберите уровень магических способностей:")
+    print("1 - Новичок (1 уровень)")
+    print("2 - Опытный (2 уровень)")
+    print("3 - Мастер (3 уровень)")
+    level_choice = input("Ваш выбор (1-3): ").strip()
+    levels = {"1": "1 уровень (новичок)", "2": "2 уровень (опытный)", "3": "3 уровень (мастер)"}
+    level = levels.get(level_choice, "1 уровень (новичок)")
+
+    print("\nВыберите тип волшебной палочки:")
+    print("1 - Дуб с пером феникса")
+    print("2 - Ясень с чешуёй дракона")
+    print("3 - Виноградная лоза с сердечной жилой дракона")
+    wand_choice = input("Ваш выбор (1-3): ").strip()
+    wands = {
+        "1": "Дуб с пером феникса",
+        "2": "Ясень с чешуёй дракона",
+        "3": "Виноградная лоза с сердечной жилой дракона"
+    }
+    wand_type = wands.get(wand_choice, "Дуб с пером феникса")
+
+    print("\nВыберите сторону в мире магии:")
+    print("1 - Не пожиратель (светлая сторона)")
+    print("2 - Пожиратель (темная сторона)")
+    side_choice = input("Ваш выбор (1-2): ").strip()
+    side = "Пожиратель" if side_choice == "2" else "Не пожиратель"
+
+    print("\nВыберите магического питомца:")
+    print("1 - Сова")
+    print("2 - Кот")
+    print("3 - Жаба")
+    pet_choice = input("Ваш выбор (1-3): ").strip()
+    pets = {"1": "Сова", "2": "Кот", "3": "Жаба"}
+    pet = pets.get(pet_choice, "Сова")
+
+    print("\nВыберите магические способности:")
+    print("1 - Заклинания")
+    print("2 - Трансфигурация")
+    print("3 - Зельеварение")
+    ability_choice = input("Ваш выбор (1-3): ").strip()
+    abilities = {"1": "Заклинания", "2": "Трансфигурация", "3": "Зельеварение"}
+    ability = abilities.get(ability_choice, "Заклинания")
+
+    print("\nВыберите чистоту крови:")
+    print("1 - Чистокровный")
+    print("2 - Полукровка")
+    print("3 - Маглорождённый")
+    blood_choice = input("Ваш выбор (1-3): ").strip()
+    blood_types = {"1": "Чистокровный", "2": "Полукровка", "3": "Маглорождённый"}
+    blood_purity = blood_types.get(blood_choice, "Чистокровный")
+
+    player_wizard = Wizard(
+        name, surname, level, wand_type, side, pet, ability, blood_purity, role, appearance
+    )
+
+    print(f"\nПоздравляем! Вы создали персонажа:")
+    print(f"   {player_wizard.name} {player_wizard.surname} - {role} Хогвартса")
+    player_wizard.display_appearance()
+
+    return player_wizard
+
+
+def create_artifacts():
+    return [
+        Artifact("Мантия-невидимка", 15, "Делает владельца невидимым"),
+        Artifact("Воскрешающий камень", 25, "Позволяет видеть умерших"),
+        Artifact("Бузинная палочка", 30, "Самая мощная волшебная палочка"),
+        Artifact("Распределяющая шляпа", 10, "Дает мудрые советы"),
+        Artifact("Зеркало Еиналеж", 20, "Показывает самое сокровенное желание"),
+        Artifact("Карта мародеров", 12, "Показывает всех в Хогвартсе"),
+        Artifact("Омут памяти", 18, "Позволяет просматривать воспоминания"),
+        Artifact("Кубок огня", 22, "Выбирает чемпионов Турнира Трех Волшебников")
+    ]
+
+
+class Ministry_of_Magic:
+    def __init__(self, ministers, auror, defendantes, main_goal):
+        self.ministers = ministers
+        self.auror = auror
+        self.defendantes = defendantes
+        self.main_goal = main_goal
+
+    def ministry_info(self):
+        print(f"Министры: {self.ministers}")
+        print(f"Авроры: {self.auror}")
+        print(f"Подсудимые: {self.defendantes}")
+        print(f"Главная цель: {self.main_goal}")
+        print(" ~ * ~ " * 8)
+
+
+class Hogwarts:
+    def __init__(self):
+        self.faculties = ["Гриффиндор", "Слизерин", "Когтевран", "Пуффендуй"]
+        self.lessons = [
+            "Заклинания", "Трансфигурация", "Зельеварение",
+            "Защита от темных искусств", "Травология", "Уход за магическими существами"
+        ]
+        self.teachers = [
+            {"name": "Минерва МакГонагалл", "subject": "Трансфигурация"},
+            {"name": "Северус Снегг", "subject": "Зельеварение"},
+            {"name": "Филиус Флитвик", "subject": "Заклинания"},
+            {"name": "Помона Стебль", "subject": "Травология"},
+            {"name": "Рубеус Хагрид", "subject": "Уход за магическими существами"}
+        ]
+
+    def hogwarts_info(self):
+        print("=" * 50)
+        print("ШКОЛА ЧАРОДЕЙСТВА И ВОЛШЕБСТВА ХОГВАРТС")
+        print("=" * 50)
+        print("Факультеты:", ", ".join(self.faculties))
+        print("Предметы:", ", ".join(self.lessons))
+        print("\nПреподаватели:")
+        for teacher in self.teachers:
+            print(f"  - {teacher['name']} ({teacher['subject']})")
+        print(" ~ * ~ " * 8)
+
+    def attend_lesson(self, wizard, lesson_type):
+        print(f"\n{'-' * 40}")
+        print(f"{wizard.name} посещает пару: {lesson_type}")
+
+        if wizard.role == "студент":
+            success_chance = random.random()
+            if success_chance > 0.3:
+                points_earned = random.randint(5, 15)
+                wizard.hogwarts_points += points_earned
+                wizard.lessons_attended += 1
+                print(f"Успех! {wizard.name} хорошо справился с заданием!")
+                print(f"Получено {points_earned} очков для {self.get_wizard_faculty(wizard)}!")
+
+                if random.random() > 0.7:
+                    rep_bonus = random.randint(5, 10)
+                    wizard.gain_reputation(rep_bonus)
+                    print(f"Бонус! +{rep_bonus} к репутации!")
+            else:
+                print(f"Неудача! {wizard.name} не справился с заданием...")
+
+                if random.random() > 0.8:
+                    points_lost = random.randint(1, 5)
+                    wizard.hogwarts_points = max(0, wizard.hogwarts_points - points_lost)
+                    print(f"Потеряно {points_lost} очков для {self.get_wizard_faculty(wizard)}!")
+
+        elif wizard.role == "преподаватель":
+            points_earned = random.randint(10, 20)
+            wizard.hogwarts_points += points_earned
+            wizard.lessons_attended += 1
+            rep_bonus = random.randint(5, 15)
+            wizard.gain_reputation(rep_bonus)
+            print(f"{wizard.name} успешно провел(а) пару по {lesson_type}!")
+            print(f"Получено {points_earned} очков и +{rep_bonus} к репутации!")
+
+        print(f"Всего очков Хогвартса: {wizard.hogwarts_points}")
+        print(f"Всего посещено пар: {wizard.lessons_attended}")
+
+    def get_wizard_faculty(self, wizard):
+        if wizard.side_of_the_world_of_magic == "Пожиратель":
+            return "Слизерин"
+        else:
+            facult = random.randint(1, 4)
+            if facult == 1:
+                return "Гриффиндор"
+            if facult == 2:
+                return "Пуффендуй"
+            if facult == 3:
+                return "Когтевран"
+            if facult == 4:
+                return "Слизерин"
+
+    def show_academic_progress(self, wizard):
+        print(f"\n{'=' * 40}")
+        print(f"УСПЕВАЕМОСТЬ: {wizard.name} {wizard.surname}")
+        print(f"{'=' * 40}")
+        print(f"Факультет: {self.get_wizard_faculty(wizard)}")
+        print(f"Роль: {wizard.role}")
+        print(f"Очки Хогвартса: {wizard.hogwarts_points}")
+        print(f"Посещено пар: {wizard.lessons_attended}")
+
+        if wizard.lessons_attended > 0:
+            average_points = wizard.hogwarts_points / wizard.lessons_attended
+            if average_points >= 10:
+                grade = "Отлично"
+            elif average_points >= 7:
+                grade = "Хорошо"
+            elif average_points >= 5:
+                grade = "Удовлетворительно"
+            else:
+                grade = "Неудовлетворительно"
+            print(f"Средний балл: {average_points:.1f} ({grade})")
+
+        print(" ~ * ~ " * 8)
+
+
+class Artifact:
+    def __init__(self, name, power, description):
+        self.name = name
+        self.power = power
+        self.description = description
+
+    def artifact_info(self):
+        print(f"Артефакт: {self.name}")
+        print(f"Сила: {self.power}")
+        print(f"Описание: {self.description}")
+        print(" ~ * ~ " * 8)
+
+
+class Help:
+    def __init__(self):
+        self.healing_potions = 3
+
+    def show_info(self):
+        print(f"Доступные зелья для лечения: {self.healing_potions}")
+        print(" ~ * ~ " * 8)
+
+    def heal_character(self, wizard):
+        if self.healing_potions > 0:
+            if wizard.health < wizard.max_health:
+                old_health = wizard.health
+                wizard.health = random.randint(60, 100)
+                self.healing_potions -= 1
+                print(f"Лечили: {wizard.name}! Здоровье: {old_health} -> {wizard.health}")
+                print(f"Осталось зелий: {self.healing_potions}")
+            else:
+                print(f"{wizard.name} уже имеет полное здоровье!")
+        else:
+            print("Не осталось зелий!")
+
+    def replenish_potions(self, amount):
+        self.healing_potions += amount
+        print(f"Получено {amount} зелий. Теперь доступно: {self.healing_potions}")
+
+
+class Hogsmid:
+    def __init__(self, hog_shops, hog_event, hog_goods):
+        self.hog_shops = hog_shops
+        self.hog_event = hog_event
+        self.hog_goods = hog_goods
+        self.prices = {  # Добавлено: цены на товары
+            "Волшебная палочка": 50,
+            "Леденцы с неожиданным вкусом": 10,
+            "Шутки для волшебников": 15,
+            "Магические учебники": 30,
+            "Зелье здоровья": 25,
+            "Магическая книга": 40,
+            "Свиток заклинаний": 35,
+            "Волшебные бобы": 5
+        }
+
+    def display_shop_info(self):
+        print(f"Магазины, доступные для посещения: {self.hog_shops}")
+        print(" ~ $ ~ " * 8)
+
+    def display_shop_scene(self):
+        print(f"ТОВАРЫ: {self.hog_goods}")
+        print("=" * 60)
+
+    def show_goods_with_prices(self):
+        print("\nТОВАРЫ И ЦЕНЫ:")
+        print("-" * 40)
+        for i, good in enumerate(self.hog_goods, 1):
+            price = self.prices.get(good, 20)
+            print(f"{i}. {good} - {price} галлеонов")
+        print("-" * 40)
+
+    def buy_item(self, wizard, item_name):
+        if item_name not in self.prices:
+            print(f"Товар '{item_name}' не найден!")
+            return False
+
+        price = self.prices[item_name]
+        if wizard.galleons >= price:
+            wizard.galleons -= price
+            print(f"{wizard.name} купил(а) '{item_name}' за {price} галлеонов!")
+            print(f"Осталось галлеонов: {wizard.galleons}")
+
+            if item_name == "Зелье здоровья":
+                wizard.restore_health(20)
+            elif item_name == "Магическая книга":
+                wizard.hogwarts_points += 10
+                print(f"+10 очков Хогвартса!")
+            elif item_name == "Свиток заклинаний":
+                wizard.gain_reputation(5)
+                print(f"+5 к репутации!")
+
+            return True
+        else:
+            print(f"Недостаточно галлеонов! Нужно: {price}, есть: {wizard.galleons}")
+            return False
+
+
+class Battle:
+    def __init__(self, player_wizard, opponent_wizard):
+        self.player_wizard = player_wizard
+        self.opponent_wizard = opponent_wizard
+
+    def display_battle_scene(self):
+        print("\n" + "=" * 60)
+        print(f"БИТВА: {self.player_wizard.name} vs {self.opponent_wizard.name}")
+        print("=" * 60)
+
+        battle_symbols = [
+            "  ⚡  ",
+            "  ✨  ",
+            "  🔥  ",
+            "  💥  ",
+            "  🌟  "
+        ]
+
+        battle_symbol = random.choice(battle_symbols)
+
+        for i in range(5):
+            player_line = self.player_wizard.appearance[i] if i < len(self.player_wizard.appearance) else "     "
+            opponent_line = self.opponent_wizard.appearance[i] if i < len(self.opponent_wizard.appearance) else "     "
+
+            print(f"{player_line}  {battle_symbol}  {opponent_line}")
+
+        player_health_bar = "█" * (self.player_wizard.health // 10) + "░" * (10 - self.player_wizard.health // 10)
+        opponent_health_bar = "█" * (self.opponent_wizard.health // 10) + "░" * (10 - self.opponent_wizard.health // 10)
+
+        print(f"\n{self.player_wizard.name}: {player_health_bar} {self.player_wizard.health} HP")
+        print(f"{self.opponent_wizard.name}: {opponent_health_bar} {self.opponent_wizard.health} HP")
+        print("=" * 60)
+
+    def fight(self):
+        self.display_battle_scene()
+
+        print(f"\nБой начался:\n{self.player_wizard.name} VS {self.opponent_wizard.name}")
+
+        round_num = 1
+        while self.player_wizard.health > 0 and self.opponent_wizard.health > 0:
+            print(f"\n--- Раунд {round_num} ---")
+
+            self.display_battle_scene()
+
+            action = input(
+                f"ХОД {self.player_wizard.name}: Атаковать(а) / Защититься(з) / Особое умение(о) / Использовать артефакт(ар)? ").lower()
+            if action == 'а':
+                damage = random.randint(15, 35)
+                self.opponent_wizard.take_damage(damage)
+            elif action == 'з':
+                healing = random.randint(10, 20)
+                self.player_wizard.restore_health(healing)
+            elif action == 'о':
+                special_damage = random.randint(25, 45)
+                print(f"{self.player_wizard.name} использует {self.player_wizard.magical_abilities}!")
+                self.opponent_wizard.take_damage(special_damage)
+            elif action == 'ар':
+                artifact_bonus = self.player_wizard.use_artifact_in_battle()
+                if artifact_bonus > 0:
+                    self.opponent_wizard.take_damage(artifact_bonus)
+            else:
+                print("Неверное действие! Пропускаете ход.")
+
+            if self.opponent_wizard.health <= 0:
+                break
+
+            print(f"\nХОД {self.opponent_wizard.name}:")
+            comp_action = random.choice(['а', 'з', 'о', 'ар'])
+            if comp_action == 'а':
+                damage = random.randint(15, 35)
+                self.player_wizard.take_damage(damage)
+            elif comp_action == 'з':
+                healing = random.randint(10, 20)
+                self.opponent_wizard.restore_health(healing)
+            elif comp_action == 'о':
+                special_damage = random.randint(25, 45)
+                print(f"{self.opponent_wizard.name} использует {self.opponent_wizard.magical_abilities}!")
+                self.player_wizard.take_damage(special_damage)
+            elif comp_action == 'ар':
+                artifact_bonus = self.opponent_wizard.use_artifact_in_battle()
+                if artifact_bonus > 0:
+                    self.player_wizard.take_damage(artifact_bonus)
+
+            round_num += 1
+
+        if self.player_wizard.health > 0:
+            print(f"\n{self.player_wizard.name} победил!")
+            reputation_gain = random.randint(20, 40)
+            self.player_wizard.gain_reputation(reputation_gain)
+            self.opponent_wizard.lose_reputation(reputation_gain // 2)
+            self.player_wizard.wins += 1
+            self.opponent_wizard.losses += 1
+            self.award_winner(self.player_wizard)
+        else:
+            print(f"\n{self.opponent_wizard.name} победил!")
+            reputation_gain = random.randint(20, 40)
+            self.opponent_wizard.gain_reputation(reputation_gain)
+            self.player_wizard.lose_reputation(reputation_gain // 2)
+            self.opponent_wizard.wins += 1
+            self.player_wizard.losses += 1
+            self.award_winner(self.opponent_wizard)
+
+    def award_winner(self, winner):
+        artifacts_pool = create_artifacts()
+        available_artifacts = [a for a in artifacts_pool if a not in winner.artifacts]
+
+        if available_artifacts and winner.can_equip_artifact():
+            new_artifact = random.choice(available_artifacts)
+            winner.add_artifact(new_artifact)
+
+        money_reward = random.randint(20, 50)
+        winner.galleons += money_reward
+        print(f"Победитель получает {money_reward} галлеонов!")
+        print(f"Теперь у {winner.name}: {winner.galleons} галлеонов")
+
+
+class Competitions:
+    def __init__(self):
+        self.quidditch_teams = ["Гриффиндор", "Слизерин", "Когтевран", "Пуффендуй"]
+        self.tournament_stages = [
+            "Первое испытание: Золотое яйцо",
+            "Второе испытание: Подводный мир",
+            "Третье испытание: Лабиринт"
+        ]
+
+    def show_competitions_menu(self):
+        print("\n" + "=" * 50)
+        print("КОНКУРСЫ И СОРЕВНОВАНИЯ")
+        print("=" * 50)
+        print("1 - Турнир по квиддичу")
+        print("2 - Турнир трех волшебников")
+        print("3 - Назад")
+
+    def play_quidditch(self, wizard, hogwarts):
+        print("\n" + "=" * 50)
+        print("ТУРНИР ПО КВИДДИЧУ")
+        print("=" * 50)
+
+        wizard_faculty = hogwarts.get_wizard_faculty(wizard)
+        print(f"Ваш факультет: {wizard_faculty}")
+
+        opponent = random.choice([team for team in self.quidditch_teams if team != wizard_faculty])
+        print(f"Матч: {wizard_faculty} vs {opponent}")
+
+        print("\nМатч начинается...")
+        for i in range(3):
+            print("⚡" * 10)
+
+        if random.random() > 0.5:
+            print(f"\nПОБЕДА! {wizard_faculty} выигрывает матч!")
+            wizard.gain_reputation(10)
+            print(f"+10 к репутации! Теперь: {wizard.reputation_points}")
+            return True
+        else:
+            print(f"\nПОРАЖЕНИЕ! {opponent} выигрывает матч!")
+            wizard.lose_reputation(10)
+            print(f"-10 репутации! Теперь: {wizard.reputation_points}")
+            return False
+
+    def play_triwizard_tournament(self, wizard):
+        print("\n" + "=" * 50)
+        print("ТУРНИР ТРЕХ ВОЛШЕБНИКОВ")
+        print("=" * 50)
+
+        print(f"{wizard.name} участвует в Турнире трех волшебников!")
+        print("Шанс пройти каждый этап: 33%")
+
+        stages_won = 0
+        total_stages = len(self.tournament_stages)
+
+        for i, stage in enumerate(self.tournament_stages, 1):
+            print(f"\n--- Этап {i}: {stage} ---")
+            print("Подготовка к испытанию...")
+
+            for _ in range(3):
+                print("✨", end=" ")
+            print()
+
+            if random.random() <= 0.33:
+                print(f"УСПЕХ! {wizard.name} прошел(ла) этап '{stage}'!")
+                stages_won += 1
+            else:
+                print(f"НЕУДАЧА! {wizard.name} не справился(ась) с этапом '{stage}'")
+                break
+
+        if stages_won == total_stages:
+            print(f"\nВЕЛИКОЛЕПНО! {wizard.name} ВЫИГРАЛ(А) ТУРНИР ТРЕХ ВОЛШЕБНИКОВ!")
+            old_reputation = wizard.reputation_points
+            wizard.reputation_points *= 3
+            wizard.galleons += 200
+            print(f"Репутация утроена: {old_reputation} → {wizard.reputation_points}")
+            print(f"+200 галлеонов! Теперь: {wizard.galleons}")
+            return True
+        else:
+            print(f"\nТурнир завершен. Пройдено этапов: {stages_won}/{total_stages}")
+            if stages_won > 0:
+                participation_bonus = stages_won * 5
+                wizard.gain_reputation(participation_bonus)
+                wizard.galleons += stages_won * 20
+                print(f"Награда за участие: +{participation_bonus} репутации, +{stages_won * 20} галлеонов")
+            return False
+
+
+class Dangerous_lottery:
+    def __init__(self):
+        self.locations = ["Кричащая хижина", "Дракучая ива", "Запретный лес"]
+
+    def show_locations(self):
+        print("\n" + "=" * 50)
+        print("ОПАСНЫЕ ЛОКАЦИИ - ИСПЫТАЙТЕ СВОЮ УДАЧУ!")
+        print("=" * 50)
+        for i, location in enumerate(self.locations, 1):
+            print(f"{i}. {location}")
+        print("\nШанс 50/50: либо удвоение репутации, либо потеря половины здоровья и четверти репутации!")
+        print(" ~ ! ~ " * 8)
+
+    def visit_location(self, wizard):
+        print("\n" + "=" * 50)
+        print("ПОСЕЩЕНИЕ ОПАСНОЙ ЛОКАЦИИ")
+        print("=" * 50)
+
+        self.show_locations()
+
+        try:
+            choice = int(input("\nВыберите локацию для посещения (1-3): "))
+            if 1 <= choice <= 3:
+                location = self.locations[choice - 1]
+                print(f"\n{'-' * 40}")
+                print(f"{wizard.name} отправляется в {location}...")
+                print(f"{'-' * 40}")
+
+                if random.random() > 0.5:
+                    old_reputation = wizard.reputation_points
+                    wizard.reputation_points *= 2
+                    print(f"УДАЧА! {wizard.name} успешно исследовал(а) {location}!")
+                    print(f"Репутация удвоена: {old_reputation} → {wizard.reputation_points}")
+                    print("Вы вернулись невредимым и с повышенной репутацией!")
+                else:
+                    health_loss = wizard.health // 2
+                    reputation_loss = wizard.reputation_points // 4
+
+                    old_health = wizard.health
+                    old_reputation = wizard.reputation_points
+
+                    wizard.take_damage(health_loss)
+                    wizard.lose_reputation(reputation_loss)
+
+                    print(f"НЕУДАЧА! {wizard.name} попал(а) в беду в {location}!")
+                    print(f"Потеряно здоровья: {old_health} → {wizard.health}")
+                    print(f"Потеряно репутации: {old_reputation} → {wizard.reputation_points}")
+                    print("Вам чудом удалось спастись!")
+
+                return True
+            else:
+                print("Неверный выбор! Пожалуйста, выберите от 1 до 3.")
+                return False
+        except ValueError:
+            print("Пожалуйста, введите число!")
+            return False
+
+
+def main_game():
+    hogwarts = Hogwarts()
+    help_system = Help()
+    dangerous_lottery = Dangerous_lottery()
+    competitions = Competitions()
+
+    hogsmid = Hogsmid(
+        hog_shops=["Магазин волшебных палочек Олливандера", "Сладкордский дворец", "Магазин шуток Зонко",
+                   "Книжный магазин 'Чернильная душа'"],
+        hog_event="Еженедельная распродажа в Косом переулке",
+        hog_goods=["Волшебная палочка", "Леденцы с неожиданным вкусом", "Шутки для волшебников", "Магические учебники",
+                   "Зелье здоровья", "Магическая книга", "Свиток заклинаний", "Волшебные бобы"])
+
+    print("Добро пожаловать в Мир Магии!")
+
+    player_wizard = create_character()
+
+    wizard_1 = Wizard("Сириус", "Роузон", "10 уровень (опытный маг)", "Дуб с пером феникса", "Не пожиратель", "Жабка",
+                      "Анимаг", "Чистокровный", "студент", random.choice(variations))
+    wizard_2 = Wizard("Люциус", "Гринн", "7 уровень (обученный маг)", "Ясень с чешуёй дракона", "Пожиратель", "Крыса",
+                      "Прорицание", "Чистокровный", "преподаватель", random.choice(variations))
+    wizard_3 = Wizard("Гермиона", "Грейнджер", "9 уровень", "Виноградная лоза с сердечной жилой дракона",
+                      "Не пожиратель", "Кот", "Заклинания", "Маглорождённая", "студент", random.choice(variations))
+    wizard_4 = Wizard("Драко", "Малфой", "8 уровень", "Боярышник с волосом единорога", "Пожиратель", "Сова",
+                      "Тёмные искусства", "Чистокровный", "студент", random.choice(variations))
+
+    all_wizards = [player_wizard, wizard_1, wizard_2, wizard_3, wizard_4]
+
+    artifacts_pool = create_artifacts()
+
+    for wizard in all_wizards:
+        if wizard.can_equip_artifact():
+            artifact = random.choice(artifacts_pool)
+            wizard.add_artifact(artifact)
+            artifacts_pool.remove(artifact)
+
+    while True:
+        print("\n" + "=" * 50)
+        print("ГЛАВНОЕ МЕНЮ")
+        print("1 - Начать новый бой")
+        print("2 - Хогвартс (учеба/преподавание)")
+        print("3 - Соревнования")
+        print("4 - Косой переулок (покупки)")
+        print("5 - Опасные локации (испытайте удачу)")
+        print("6 - Показать информацию о волшебниках")
+        print("7 - Показать информацию об артефактах волшебников")
+        print("8 - Помощь и исцеление")
+        print("9 - Карта Хогвартса")
+        print("10 - Выйти из игры")
+
+        choice = input("\nВыберите действие (1-8): ").strip()
+
+        if choice == '1':
+            print("\nВыберите противника:")
+            available_opponents = [w for w in all_wizards if w != player_wizard]
+            for i, wizard in enumerate(available_opponents, 1):
+                print(f"[{i}] {wizard.name} {wizard.surname} ({wizard.role}, {wizard.side_of_the_world_of_magic})")
+
+            try:
+                opponent_choice = int(input("Ваш выбор: ")) - 1
+                if 0 <= opponent_choice < len(available_opponents):
+                    opponent_wizard = available_opponents[opponent_choice]
+
+                    if player_wizard.health <= 0:
+                        print(f"{player_wizard.name} слишком слаб для боя! Исцелите его сначала.")
+                        continue
+                    if opponent_wizard.health <= 0:
+                        print(f"{opponent_wizard.name} слишком слаб для боя! Исцелите его сначала.")
+                        continue
+
+                    battle = Battle(player_wizard, opponent_wizard)
+                    battle.fight()
+
+                    if random.random() < 0.3:
+                        help_system.replenish_potions(1)
+
+                    continue_game = input("\nХотите продолжить игру? (да/нет): ").lower()
+                    if continue_game != 'да':
+                        print("Спасибо за игру! До встречи в Хогвартсе!")
+                        return
+                else:
+                    print("Неверный выбор противника!")
+            except ValueError:
+                print("Пожалуйста, введите число!")
+
+        elif choice == '2':
+            print("\n" + "=" * 50)
+            print("ХОГВАРТС")
+            hogwarts.hogwarts_info()
+
+            print("\n1 - Посетить пару")
+            print("2 - Посмотреть успеваемость")
+            print("3 - Информация о Хогвартсе")
+            print("4 - Назад")
+
+            hogwarts_choice = input("Выберите действие (1-4): ").strip()
+
+            if hogwarts_choice == '1':
+                print("\nВыберите предмет для посещения:")
+                for i, lesson in enumerate(hogwarts.lessons, 1):
+                    print(f"{i} - {lesson}")
+
+                try:
+                    lesson_choice = int(input("Ваш выбор: ")) - 1
+                    if 0 <= lesson_choice < len(hogwarts.lessons):
+                        lesson = hogwarts.lessons[lesson_choice]
+                        hogwarts.attend_lesson(player_wizard, lesson)
+                    else:
+                        print("Неверный выбор предмета!")
+                except ValueError:
+                    print("Пожалуйста, введите число!")
+
+            elif hogwarts_choice == '2':
+                hogwarts.show_academic_progress(player_wizard)
+
+            elif hogwarts_choice == '3':
+                hogwarts.hogwarts_info()
+
+            elif hogwarts_choice == '4':
+                continue
+            else:
+                print("Неверный выбор!")
+
+        elif choice == '3':
+            competitions.show_competitions_menu()
+            comp_choice = input("Выберите соревнование (1-3): ").strip()
+            if comp_choice == '1':
+                competitions.play_quidditch(player_wizard, hogwarts)
+            elif comp_choice == '2':
+                if player_wizard.health > 30:
+                    competitions.play_triwizard_tournament(player_wizard)
+                else:
+                    print("Слишком низкое здоровье для участия в Турнире! Минимум 30 HP.")
+            elif comp_choice == '3':
+                continue
+            else:
+                print("Неверный выбор!")
+
+        elif choice == '4':
+            print("\n" + "=" * 50)
+            print("КОСОЙ ПЕРЕУЛОК")
+            hogsmid.display_shop_info()
+            hogsmid.display_shop_scene()
+            print(f"\nВаш баланс: {player_wizard.galleons} галлеонов")
+            print("\n1 - Посмотреть магазины")
+            print("2 - Посмотреть товары и цены")
+            print("3 - Купить товар")
+            print("4 - Узнать о событиях")
+            print("5 - Назад")
+
+            shop_choice = input("Выберите действие (1-5): ").strip()
+            if shop_choice == '1':
+                print("\nМагазины Косого переулка:")
+                for i, shop in enumerate(hogsmid.hog_shops, 1):
+                    print(f"{i}. {shop}")
+
+            elif shop_choice == '2':
+                hogsmid.show_goods_with_prices()
+
+            elif shop_choice == '3':
+                hogsmid.show_goods_with_prices()
+
+                try:
+                    item_choice = int(input("\nВыберите номер товара для покупки: "))
+                    if 1 <= item_choice <= len(hogsmid.hog_goods):
+                        item_name = hogsmid.hog_goods[item_choice - 1]
+                        hogsmid.buy_item(player_wizard, item_name)
+                    else:
+                        print("Неверный выбор товара!")
+                except ValueError:
+
+                    print("Пожалуйста, введите число!")
+            elif shop_choice == '4':
+                print(f"\nТекущее событие: {hogsmid.hog_event}")
+
+            elif shop_choice == '5':
+                continue
+
+            else:
+                print("Неверный выбор!")
+
+        elif choice == '5':
+            dangerous_lottery.visit_location(player_wizard)
+
+        elif choice == '6':
+            print("\n" + "~" * 50)
+            print("ИНФОРМАЦИЯ О ВОЛШЕБНИКАХ:")
+            for wizard in all_wizards:
+                wizard.wizard_info()
+
+        elif choice == '7':
+            print("\n" + "~" * 50)
+            print("ВСЕ ДОСТУПНЫЕ АРТЕФАКТЫ:")
+            all_artifacts = create_artifacts()
+            for i, artifact in enumerate(all_artifacts, 1):
+                print(f"{i}. ", end="")
+                artifact.artifact_info()
+
+            print("\nРАСПРЕДЕЛЕНИЕ АРТЕФАКТОВ:")
+            for wizard in all_wizards:
+                if wizard.artifacts:
+                    print(f"\n{wizard.name} {wizard.surname}:")
+                    for artifact in wizard.artifacts:
+                        print(f"  - {artifact.name} (сила: {artifact.power})")
+                else:
+                    print(f"\n{wizard.name} {wizard.surname}: нет артефактов")
+
+        elif choice == '8':
+            print("\n" + "~" * 50)
+            print("ПОМОЩЬ И ИСЦЕЛЕНИЕ")
+            help_system.show_info()
+
+            print("\n1 - Исцелить конкретного волшебника")
+            print("2 - Пополнить запасы зелий")
+            print("3 - Назад")
+
+            help_choice = input("Выберите действие (1-3): ").strip()
+
+            if help_choice == '1':
+                print("\nВыберите волшебника для исцеления:")
+                for i, wizard in enumerate(all_wizards, 1):
+                    print(f"[{i}] {wizard.name} {wizard.surname} (здоровье: {wizard.health}/{wizard.max_health})")
+
+                try:
+                    heal_choice = int(input("Ваш выбор: ")) - 1
+                    if 0 <= heal_choice < len(all_wizards):
+                        help_system.heal_character(all_wizards[heal_choice])
+
+                        if all_wizards[heal_choice] == player_wizard:
+                            if random.random() > 0.7:
+                                rep_bonus = random.randint(5, 10)
+                                player_wizard.gain_reputation(rep_bonus)
+                                print(f"Бонус! За заботу о себе вы получаете +{rep_bonus} репутации!")
+                    else:
+                        print("Неверный выбор волшебника!")
+                except ValueError:
+                    print("Пожалуйста, введите число!")
+
+            elif help_choice == '2':
+                replenish_amount = random.randint(1, 2)
+                help_system.replenish_potions(replenish_amount)
+
+                if random.random() > 0.8:
+                    extra_potion = 1
+                    help_system.replenish_potions(extra_potion)
+                    print(f"Удача! Вы нашли дополнительное зелье! +{extra_potion}")
+
+            elif help_choice == '3':
+                continue
+            else:
+                print("Неверный выбор!")
+
+        elif choice == '9':
+            img = mpimg.imread('img.png')
+            imgplot = plt.imshow(img)
+            plt.show()
+
+        elif choice == '10':
+            print("\n" + "=" * 50)
+            print("СТАТИСТИКА ИГРЫ")
+            print("=" * 50)
+
+            print(f"\nВАШ ПЕРСОНАЖ: {player_wizard.name} {player_wizard.surname}")
+            print(f"Роль: {player_wizard.role}")
+            print(f"Факультет: {hogwarts.get_wizard_faculty(player_wizard)}")
+            print(f"Уровень: {player_wizard.level}")
+            print(f"Здоровье: {player_wizard.health}/{player_wizard.max_health}")
+            print(f"Репутация: {player_wizard.reputation_points}")
+            print(f"Галлеоны: {player_wizard.galleons}")
+            print(f"Очки Хогвартса: {player_wizard.hogwarts_points}")
+            print(f"Посещено пар: {player_wizard.lessons_attended}")
+            print(f"Победы/Поражения: {player_wizard.wins}/{player_wizard.losses}")
+
+            if player_wizard.wins + player_wizard.losses > 0:
+                win_rate = (player_wizard.wins / (player_wizard.wins + player_wizard.losses)) * 100
+                print(f"Процент побед: {win_rate:.1f}%")
+
+            print(f"Артефакты: {len(player_wizard.artifacts)}")
+            for artifact in player_wizard.artifacts:
+                print(f"  - {artifact.name} (сила: {artifact.power})")
+
+            print(f"\nОБЩАЯ СТАТИСТИКА:")
+            print(f"Всего зелий осталось: {help_system.healing_potions}")
+            print(f"Всего волшебников в игре: {len(all_wizards)}")
+
+            print(f"\nТОП ВОЛШЕБНИКОВ ПО РЕПУТАЦИИ:")
+            sorted_wizards = sorted(all_wizards, key=lambda x: x.reputation_points, reverse=True)
+            for i, wizard in enumerate(sorted_wizards[:3], 1):
+                print(f"{i}. {wizard.name} {wizard.surname} - {wizard.reputation_points} очков")
+
+            print("\n" + "~" * 50)
+            confirm_exit = input("Вы уверены, что хотите выйти? (да/нет): ").lower()
+            if confirm_exit == 'да':
+                print("\n" + "=" * 50)
+                print("СПАСИБО ЗА ИГРУ!")
+                print("=" * 50)
+
+                total_score = (player_wizard.reputation_points +
+                               player_wizard.hogwarts_points +
+                               player_wizard.wins * 50 +
+                               len(player_wizard.artifacts) * 30)
+
+                print(f"\nФИНАЛЬНЫЙ СЧЕТ: {total_score} очков")
+
+                if total_score >= 500:
+                    print("ВЕЛИКОЛЕПНО! Вы настоящий мастер магии!")
+                elif total_score >= 300:
+                    print("ОТЛИЧНО! Вы опытный волшебник!")
+                elif total_score >= 200:
+                    print("ХОРОШО! Вы неплохо справились!")
+                else:
+                    print("НЕПЛОХО! В следующий раз будет лучше!")
+
+                print(f"\nДо встречи в следующем приключении, {player_wizard.name}!")
+                break
+            else:
+                print("Продолжаем игру!")
+
+        else:
+            print("Неверный выбор! Попробуйте снова.")
+
+
+if __name__ == "__main__":
+    main_game()
